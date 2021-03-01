@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?jelly escape-by-default='true'?>
+
+<jelly:jelly xmlns:jelly="jelly:core" xmlns:form="/lib/form" xmlns:c="/lib/credentials">
+    <form:entry title="SCDF Server URL" field="url"  description="Spring cloud dataflow server url">
+        <form:textbox/>
+    </form:entry>
+    <form:entry title="Task Name" field="taskName"  description="Task name">
+        <form:textbox/>
+    </form:entry>
+    <form:entry title="Client ID" field="credentialId" description="Spring cloud dataflow oauth2 client-credential">
+        <c:select/>
+    </form:entry>
+    <form:entry title="OAUTH2 Token URL" field="tokenUri"  description="Oauth2 token URI">
+        <form:textbox/>
+    </form:entry>
+</jelly:jelly>
