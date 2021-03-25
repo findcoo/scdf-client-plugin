@@ -26,9 +26,7 @@ import org.slf4j.LoggerFactory
 class ScdfTaskNotifier
 @DataBoundConstructor
 constructor(
-    private val url: String,
-    private val credentialId: String? = null,
-    private val tokenUri: String? = null,
+    private val servers: List<ScdfServerInfo> = listOf(),
     private val taskName: String,
     private val properties: String? = null,
     private val arguments: String? = null
@@ -39,12 +37,8 @@ constructor(
     }
 
     override fun perform(build: AbstractBuild<*, *>, launcher: Launcher, listener: BuildListener?): Boolean {
-        log.info(credentialId)
         if (credentialId != null) {
             val credential = CredentialsProvider.findCredentialById(credentialId, ScdfCredentials::class.java, build)
-            log.info(credential!!.clientId)
-            log.info(credential!!.clientSecret)
-
             ScdfTaskExecutor(listener!!.logger).executeTask(
                 url,
                 credential!!.clientId,

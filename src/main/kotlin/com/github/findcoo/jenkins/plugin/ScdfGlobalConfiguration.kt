@@ -32,8 +32,7 @@ class ScdfGlobalConfiguration() : GlobalConfiguration() {
     return GlobalConfigurationCategory.get(ScdfGlobalConfigurationCategory::class.java)
   }
 
-  companion object
-
+  companion object {
     fun get(): ScdfGlobalConfiguration {
       return Jenkins.get().getDescriptorByType(ScdfGlobalConfiguration::class.java)
     }
