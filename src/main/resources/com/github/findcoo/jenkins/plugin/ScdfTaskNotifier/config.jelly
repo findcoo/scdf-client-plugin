@@ -9,6 +9,12 @@
     <form:entry title="Task Name" field="taskName"  description="Task name">
         <form:textbox/>
     </form:entry>
+    <form:entry title="Properties" field="properties"  description="Task Properties">
+        <form:textbox/>
+    </form:entry>
+    <form:entry title="Arguments" field="arguments"  description="Task Arguments">
+        <form:textbox/>
+    </form:entry>
     <form:entry title="Client ID" field="credentialId" description="Spring cloud dataflow oauth2 client-credential">
         <c:select/>
     </form:entry>

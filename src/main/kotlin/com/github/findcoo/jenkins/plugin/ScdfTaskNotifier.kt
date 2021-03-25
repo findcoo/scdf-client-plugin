@@ -39,7 +39,6 @@ constructor(
     }
 
     override fun perform(build: AbstractBuild<*, *>, launcher: Launcher, listener: BuildListener?): Boolean {
-
         log.info(credentialId)
         if (credentialId != null) {
             val credential = CredentialsProvider.findCredentialById(credentialId, ScdfCredentials::class.java, build)
