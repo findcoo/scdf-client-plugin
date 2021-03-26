@@ -14,9 +14,6 @@ import org.kohsuke.stapler.AncestorInPath
 import org.kohsuke.stapler.DataBoundConstructor
 import hudson.model.Descriptor
 import jenkins.model.Jenkins
-import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials
-
-import io.micrometer.core.instrument.binder.jetty.JettyClientTags.uri
 
 import com.cloudbees.plugins.credentials.domains.URIRequirementBuilder
 
