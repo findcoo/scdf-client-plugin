@@ -1,5 +1,7 @@
 package com.github.findcoo.jenkins.plugin
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.cloud.dataflow.rest.client.DataFlowTemplate
 import org.springframework.http.HttpRequest
@@ -18,7 +20,7 @@ import java.net.URI
 
 class ScdfTaskExecutor(private val log: PrintStream? = null) {
 
-    companion object {
+  companion object {
         private const val DEFAULT_REGISTRATION_ID = "default"
     }
 

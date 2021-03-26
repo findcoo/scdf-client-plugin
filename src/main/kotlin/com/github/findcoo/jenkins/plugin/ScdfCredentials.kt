@@ -12,12 +12,12 @@ class ScdfCredentials
 
 @DataBoundConstructor
 constructor(
-    credentialId: String,
-    description: String,
+    val _credentialsId: String,
+    val _description: String,
     val clientId: String,
     val clientSecret: String,
     val scope: String
-) : com.cloudbees.plugins.credentials.impl.BaseStandardCredentials(credentialId, description) {
+) : com.cloudbees.plugins.credentials.impl.BaseStandardCredentials(_credentialsId, _description) {
 
     @Extension
     class Descriptor : CredentialsDescriptor() {
