@@ -30,6 +30,6 @@ constructor(
 
 class ScdfCredentialProvider : CredentialsNameProvider<ScdfCredentials>() {
     override fun getName(credentials: ScdfCredentials): String {
-        return credentials.description
+        return credentials._credentialsId
     }
 }
