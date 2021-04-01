@@ -47,8 +47,8 @@ dependencies {
   }
   implementation("org.apache.httpcomponents:httpclient:4.5.10")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.3")
-  implementation("org.jenkins-ci.plugins:credentials:2.3.0")
-  implementation("org.jenkins-ci.plugins:jackson2-api:2.11.0")
+  implementation("org.jenkins-ci.plugins:credentials:2.1.13")
+  implementation("org.jenkins-ci.plugins:jackson2-api:2.7.3")
 
   kapt("net.java.sezpoz:sezpoz:1.12")
 
