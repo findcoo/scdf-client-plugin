@@ -17,7 +17,7 @@ repositories {
 }
 
 jenkinsPlugin {
-  jenkinsVersion.set("2.280")
+  jenkinsVersion.set("2.168")
   displayName = "SCDF Client Plugin"
   shortName = "scdf-client-plugin"
   gitHubUrl = "https://github.com/findcoo/scdf-client-plugin"
@@ -47,11 +47,8 @@ dependencies {
   }
   implementation("org.apache.httpcomponents:httpclient:4.5.10")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.3")
-  implementation("org.jenkins-ci.plugins:credentials:2.3.15")
-  implementation("org.jenkins-ci.plugins:jackson2-api:2.11.3")
-
-  jenkinsServer("org.jenkins-ci.plugins:jackson2-api:2.11.3")
-  jenkinsServer("org.jenkins-ci.plugins:credentials:2.3.15")
+  implementation("org.jenkins-ci.plugins:credentials:2.3.0")
+  implementation("org.jenkins-ci.plugins:jackson2-api:2.11.0")
 
   kapt("net.java.sezpoz:sezpoz:1.12")
 
