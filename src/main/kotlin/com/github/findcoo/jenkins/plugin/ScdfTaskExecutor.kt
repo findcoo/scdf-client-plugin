@@ -56,7 +56,7 @@ class ScdfTaskExecutor(private val log: PrintStream? = null) {
         if (properties == null) return mapOf()
         return properties.split(",")
             .fold(mutableMapOf<String, String>()) { map: MutableMap<String, String>, it: String ->
-                val propTuple = it.split("=", 2)
+                val propTuple = it.split(Regex("="), 2)
                 if (propTuple.size == 2) {
                     map.set(propTuple[0], propTuple[1])
                 }
