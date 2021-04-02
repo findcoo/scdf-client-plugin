@@ -16,109 +16,109 @@ import java.io.PrintStream
 import java.net.URI
 
 class ScdfTaskExecutor(private val log: PrintStream? = null) {
-    private val restTempate: RestTemplate = DataFlowTemplate.prepareRestTemplate(null)
+  private val restTempate: RestTemplate = DataFlowTemplate.prepareRestTemplate(null)
 
-    companion object {
-        private const val DEFAULT_REGISTRATION_ID = "default"
-    }
+  companion object {
+    private const val DEFAULT_REGISTRATION_ID = "default"
+  }
 
-    fun executeTask(
-        url: String,
-        clientId: String? = null,
-        clientSecret: String? = null,
-        scope: String? = null,
-        tokenUri: String? = null,
-        taskName: String,
-        properties: String? = null,
-        arguments: String? = null
-    ) {
+  fun executeTask(
+    url: String,
+    clientId: String? = null,
+    clientSecret: String? = null,
+    scope: String? = null,
+    tokenUri: String? = null,
+    taskName: String,
+    properties: String? = null,
+    arguments: String? = null
+  ) {
 
-        if (clientId != null) {
-            val clientRegistrationRepository =
-                clientRegistrationRepository(clientId, clientSecret!!, scope!!, tokenUri!!)
-            restTempate.interceptors.add(
-                clientCredentialsTokenResolvingInterceptor(
-                    clientRegistrationRepository,
-                    clientId
-                )
-            )
-        }
-
-        val executionId = DataFlowTemplate(URI(url), restTempate).taskOperations()
-            .launch(taskName, parseProperties(properties), parseArguments(arguments), null)
-
-        log?.println("Properties: ${parseProperties(properties)}")
-        log?.println("Arguments: ${parseArguments(arguments)}")
-        log?.println("Excution ID: ${executionId}")
-    }
-
-    private fun parseProperties(properties: String?): Map<String, String> {
-        if (properties == null) return mapOf()
-        return properties.split(",")
-            .fold(mutableMapOf<String, String>()) { map: MutableMap<String, String>, it: String ->
-                val propTuple = it.split("=")
-                if (propTuple.size == 2) {
-                    map.set(propTuple[0], propTuple[1])
-                }
-                return map
-            }
-    }
-
-    private fun parseArguments(arguments: String?): List<String>? {
-        if (arguments == null) return listOf()
-        return arguments.split(",")
-    }
-
-    private fun clientCredentialsTokenResolvingInterceptor(
-        clientRegistrationRepository: ClientRegistrationRepository,
-        clientId: String
-    ): ClientHttpRequestInterceptor? {
-        val principal = createAuthentication(clientId)
-        val authorizedClientService: OAuth2AuthorizedClientService = InMemoryOAuth2AuthorizedClientService(
-            clientRegistrationRepository
+    if (clientId != null) {
+      val clientRegistrationRepository =
+        clientRegistrationRepository(clientId, clientSecret!!, scope!!, tokenUri!!)
+      restTempate.interceptors.add(
+        clientCredentialsTokenResolvingInterceptor(
+          clientRegistrationRepository,
+          clientId
         )
-        val authorizedClientManager = AuthorizedClientServiceOAuth2AuthorizedClientManager(
-            clientRegistrationRepository, authorizedClientService
-        )
-        val authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
-            .clientCredentials().build()
-        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider)
-        val authorizeRequest = OAuth2AuthorizeRequest
-            .withClientRegistrationId(DEFAULT_REGISTRATION_ID).principal(principal).build()
-        return ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray?, execution: ClientHttpRequestExecution ->
-            val authorizedClient = authorizedClientManager.authorize(authorizeRequest)
-            request.headers.setBearerAuth(authorizedClient!!.accessToken.tokenValue)
-            execution.execute(request, body!!)
+      )
+    }
+
+    val executionId = DataFlowTemplate(URI(url), restTempate).taskOperations()
+      .launch(taskName, parseProperties(properties), parseArguments(arguments), null)
+
+    log?.println("Properties: ${parseProperties(properties)}")
+    log?.println("Arguments: ${parseArguments(arguments)}")
+    log?.println("Excution ID: ${executionId}")
+  }
+
+  private fun parseProperties(properties: String?): Map<String, String> {
+    if (properties == null) return mapOf()
+    return properties.split(",")
+      .fold(mutableMapOf<String, String>()) { map: MutableMap<String, String>, it: String ->
+        val propTuple = it.split(Regex("="), 2)
+        if (propTuple.size == 2) {
+          map.set(propTuple[0], propTuple[1])
         }
-    }
+        map
+      }
+  }
 
-    private fun createAuthentication(principalName: String): Authentication {
-        return object : AbstractAuthenticationToken(null) {
-            private val serialVersionUID = -2038812908189509872L
-            override fun getCredentials(): Any {
-                return ""
-            }
+  private fun parseArguments(arguments: String?): List<String>? {
+    if (arguments == null) return listOf()
+    return arguments.split(",")
+  }
 
-            override fun getPrincipal(): Any {
-                return principalName
-            }
-        }
+  private fun clientCredentialsTokenResolvingInterceptor(
+    clientRegistrationRepository: ClientRegistrationRepository,
+    clientId: String
+  ): ClientHttpRequestInterceptor? {
+    val principal = createAuthentication(clientId)
+    val authorizedClientService: OAuth2AuthorizedClientService = InMemoryOAuth2AuthorizedClientService(
+      clientRegistrationRepository
+    )
+    val authorizedClientManager = AuthorizedClientServiceOAuth2AuthorizedClientManager(
+      clientRegistrationRepository, authorizedClientService
+    )
+    val authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
+      .clientCredentials().build()
+    authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider)
+    val authorizeRequest = OAuth2AuthorizeRequest
+      .withClientRegistrationId(DEFAULT_REGISTRATION_ID).principal(principal).build()
+    return ClientHttpRequestInterceptor { request: HttpRequest, body: ByteArray?, execution: ClientHttpRequestExecution ->
+      val authorizedClient = authorizedClientManager.authorize(authorizeRequest)
+      request.headers.setBearerAuth(authorizedClient!!.accessToken.tokenValue)
+      execution.execute(request, body!!)
     }
+  }
 
-    private fun clientRegistrationRepository(
-        clientId: String,
-        clientSecret: String,
-        scope: String,
-        tokenUri: String
-    ): InMemoryClientRegistrationRepository {
-        val clientRegistration = ClientRegistration
-            .withRegistrationId(DEFAULT_REGISTRATION_ID)
-            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-            .tokenUri(tokenUri)
-            .clientId(clientId)
-            .clientSecret(clientSecret)
-            .scope(scope)
-            .build()
-        return InMemoryClientRegistrationRepository(clientRegistration)
+  private fun createAuthentication(principalName: String): Authentication {
+    return object : AbstractAuthenticationToken(null) {
+      private val serialVersionUID = -2038812908189509872L
+      override fun getCredentials(): Any {
+        return ""
+      }
+
+      override fun getPrincipal(): Any {
+        return principalName
+      }
     }
+  }
+
+  private fun clientRegistrationRepository(
+    clientId: String,
+    clientSecret: String,
+    scope: String,
+    tokenUri: String
+  ): InMemoryClientRegistrationRepository {
+    val clientRegistration = ClientRegistration
+      .withRegistrationId(DEFAULT_REGISTRATION_ID)
+      .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+      .tokenUri(tokenUri)
+      .clientId(clientId)
+      .clientSecret(clientSecret)
+      .scope(scope)
+      .build()
+    return InMemoryClientRegistrationRepository(clientRegistration)
+  }
 }
