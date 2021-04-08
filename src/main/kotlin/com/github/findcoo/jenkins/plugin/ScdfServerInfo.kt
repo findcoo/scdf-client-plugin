@@ -28,7 +28,8 @@ class ScdfServerInfo
 constructor(
   var url: String,
   var credentialsId: String? = null,
-  var tokenUri: String? = null
+  var tokenUri: String? = null,
+  var scope: String? = null
 ) : AbstractDescribableImpl<ScdfServerInfo>() {
 
   @Extension

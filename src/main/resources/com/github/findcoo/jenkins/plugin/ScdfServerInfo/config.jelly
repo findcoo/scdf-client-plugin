@@ -12,6 +12,9 @@
     <form:entry title="Token URI" field="tokenUri"  description="OAuth2 token uri">
         <form:textbox/>
     </form:entry>
+    <form:entry title="Scope" field="scope"  description="OAuth2 scope">
+        <form:textbox/>
+    </form:entry>
     <form:entry title="">
       <div align="right">
         <form:repeatableDeleteButton />

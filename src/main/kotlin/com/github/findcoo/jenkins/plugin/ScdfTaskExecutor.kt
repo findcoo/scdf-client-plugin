@@ -54,7 +54,7 @@ class ScdfTaskExecutor(private val log: PrintStream? = null) {
 
     private fun parseProperties(properties: String?): Map<String, String> {
         if (properties == null) return mapOf()
-        return properties.split(",")
+        return properties.split(" ")
             .fold(mutableMapOf<String, String>()) { map: MutableMap<String, String>, it: String ->
                 val propTuple = it.split(Regex("="), 2)
                 if (propTuple.size == 2) {
@@ -66,7 +66,7 @@ class ScdfTaskExecutor(private val log: PrintStream? = null) {
 
     private fun parseArguments(arguments: String?): List<String>? {
         if (arguments == null) return listOf()
-        return arguments.split(",")
+        return arguments.split(" ")
     }
 
     private fun clientCredentialsTokenResolvingInterceptor(
